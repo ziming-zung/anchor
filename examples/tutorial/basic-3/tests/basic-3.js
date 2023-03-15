@@ -24,6 +24,11 @@ describe("basic-3", () => {
       .signers([newPuppetAccount])
       .rpc();
 
+    let endpoint = anchor.web3.PublicKey.createProgramAddressSync(
+      [Buffer.from('seed', 'utf8'), Buffer.from([253])],
+      puppet.programId
+    );
+
     // Invoke the puppet master to perform a CPI to the puppet.
     await puppetMaster.methods
       .pullStrings(new anchor.BN(111))
@@ -31,6 +36,11 @@ describe("basic-3", () => {
         puppet: newPuppetAccount.publicKey,
         puppetProgram: puppet.programId,
       })
+      .remainingAccounts([
+        { pubkey: puppet.programId, isSigner: false, isWritable: false },
+        { pubkey: newPuppetAccount.publicKey, isSigner: false, isWritable: false },
+        { pubkey: endpoint, isSigner: false, isWritable: false },
+      ])
       .rpc();
 
     // Check the state updated.

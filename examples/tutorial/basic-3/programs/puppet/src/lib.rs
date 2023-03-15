@@ -29,6 +29,9 @@ pub struct Initialize<'info> {
 pub struct SetData<'info> {
     #[account(mut)]
     pub puppet: Account<'info, Data>,
+
+    /// CHECK: dd
+    pub endpoint: Signer<'info>,
 }
 
 #[account]

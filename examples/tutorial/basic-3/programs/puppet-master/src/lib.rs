@@ -10,12 +10,15 @@ declare_id!("HmbTLCmaGvZhKnn1Zfa1JVnp7vkMV4DYVxPLWBVoN65L");
 mod puppet_master {
     use super::*;
     pub fn pull_strings(ctx: Context<PullStrings>, data: u64) -> anchor_lang::Result<()> {
-        let cpi_program = ctx.accounts.puppet_program.to_account_info();
+        let mut acc_iter = ctx.remaining_accounts.iter();
+        let cpi_program = acc_iter.next().unwrap().to_account_info();
         let cpi_accounts = SetData {
-            puppet: ctx.accounts.puppet.to_account_info(),
+            puppet: acc_iter.next().unwrap().to_account_info(),
+            endpoint: acc_iter.next().unwrap().to_account_info(),
         };
         let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
-        puppet::cpi::set_data(cpi_ctx, data)
+        puppet::cpi::set_data(cpi_ctx.with_signer(&[&[b"seed", &[253]]]), data)
+        // puppet::cpi::set_data(cpi_ctx, data)
     }
 }
 
