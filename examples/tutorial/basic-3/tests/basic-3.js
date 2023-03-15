@@ -23,23 +23,24 @@ describe("basic-3", () => {
       })
       .signers([newPuppetAccount])
       .rpc();
-
-    let endpoint = anchor.web3.PublicKey.createProgramAddressSync(
+      
+    let pda = anchor.web3.PublicKey.createProgramAddressSync(
       [Buffer.from('seed', 'utf8'), Buffer.from([253])],
-      puppet.programId
+      puppetMaster.programId
     );
-
+    console.log(`pda: ${pda}`);
     // Invoke the puppet master to perform a CPI to the puppet.
     await puppetMaster.methods
       .pullStrings(new anchor.BN(111))
       .accounts({
         puppet: newPuppetAccount.publicKey,
         puppetProgram: puppet.programId,
+        pda: pda
       })
       .remainingAccounts([
         { pubkey: puppet.programId, isSigner: false, isWritable: false },
         { pubkey: newPuppetAccount.publicKey, isSigner: false, isWritable: false },
-        { pubkey: endpoint, isSigner: false, isWritable: false },
+        { pubkey: pda, isSigner: false, isWritable: false },
       ])
       .rpc();
 

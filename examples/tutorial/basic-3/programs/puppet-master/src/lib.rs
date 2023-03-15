@@ -12,6 +12,11 @@ mod puppet_master {
     pub fn pull_strings(ctx: Context<PullStrings>, data: u64) -> anchor_lang::Result<()> {
         let mut acc_iter = ctx.remaining_accounts.iter();
         let cpi_program = acc_iter.next().unwrap().to_account_info();
+
+        let actual_pda =
+            Pubkey::create_program_address(&[b"seed", &[253]], ctx.program_id).unwrap();
+        msg!("actual_pda:{:?}", actual_pda);
+
         let cpi_accounts = SetData {
             puppet: acc_iter.next().unwrap().to_account_info(),
             endpoint: acc_iter.next().unwrap().to_account_info(),
@@ -27,5 +32,7 @@ pub struct PullStrings<'info> {
     #[account(mut)]
     pub puppet: Account<'info, Data>,
     pub puppet_program: Program<'info, Puppet>,
+    /// CHECK:
+    pub pda: UncheckedAccount<'info>,
 }
 // #endregion core
