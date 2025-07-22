@@ -26,13 +26,20 @@ token_2022 = ["spl-token-2022"]
 token_2022_extensions = ["spl-token-2022", "spl-token-group-interface", "spl-token-metadata-interface", "spl-pod"]
 
 [dependencies]
-anchor-lang = { path = "../lang", version = "0.31.1", features = ["derive"] }
+anchor-lang = { version = "0.31.1", features = ["derive"] }
 borsh = { version = "0.10.3", optional = true }
 mpl-token-metadata = { version = "5", optional = true }
-spl-associated-token-account = { version = "6", features = ["no-entrypoint"], optional = true }
+spl-associated-token-account = { version = "7", features = ["no-entrypoint"], optional = true }
 spl-memo = { version = "6", features = ["no-entrypoint"], optional = true }
-spl-token = { version = "7", features = ["no-entrypoint"], optional = true }
-spl-token-2022 = { version = "6", features = ["no-entrypoint"], optional = true }
+
+# The dependencies listed here are aligned with the requirements of the spl-associated-token-account crate,
+# which relies on specific versions of spl-token and spl-token-2022 (both at version 8).
+# By matching these versions, we ensure compatibility and prevent potential issues arising from version mismatches.
+# For more information about the dependency requirements, refer to the official documentation:
+# https://docs.rs/crate/spl-associated-token-account/latest/source/Cargo.toml#16-22
+spl-token = { version = "8", features = ["no-entrypoint"], optional = true }
+spl-token-2022 = { version = "8", features = ["no-entrypoint"], optional = true }
+
 spl-token-group-interface = { version = "0.5", optional = true }
 spl-token-metadata-interface = { version = "0.6", optional = true }
 spl-pod = { version = "0.5", optional = true }
